@@ -13,4 +13,12 @@ public class Movement {
         this.qta = qta;
         this.date = date;
     }
+
+    @Override
+    public String toString() {
+        return "\nMovement{" +
+                "qta='" + qta + '\'' +
+                ", date='" + date + '\'' +
+                '}';
+    }
 }

@@ -18,6 +18,7 @@ public class Product {
         this.name = name;
         this.qta = qta;
         this.limit_qta = limit_qta;
+        this.movements = null;
     }
 
     public Product(String code, String name, int qta, int limit_qta, List<Movement> movements)
@@ -44,5 +45,16 @@ public class Product {
 
     public List<Movement> getMovements() {
         return movements;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", qta=" + qta +
+                ", limit_qta=" + limit_qta +
+                ", \nmovements=" + movements +
+                '}'+"\n";
     }
 }

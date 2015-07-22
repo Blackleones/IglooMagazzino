@@ -10,22 +10,22 @@ import java.sql.Statement;
  * Created by blackleones on 21/07/15.
  */
 public class Database_Core {
-    private static String JDBC_CLASS_NAME = "org.sqlite.JDBC";
-    private static String DATABASE_NAME = "igloo_database.db";
-    private static String DB_ADDRESS = "jdbc:sqlite:"+DATABASE_NAME;
-    private static String CREATE_PRODUCT_TABLE =
+    private static final String JDBC_CLASS_NAME = "org.sqlite.JDBC";
+    private static final String DATABASE_NAME = "igloo_database.db";
+    private static final String DB_ADDRESS = "jdbc:sqlite:"+DATABASE_NAME;
+    private static final String CREATE_PRODUCT_TABLE =
             "CREATE TABLE IF NOT EXISTS product(" +
                     "code TEXT(13) PRIMARY KEY," +
                     "name TEXT(255) NOT NULL," +
                     "limit_qta INTEGER DEFAULT 5" +
                     ")";
 
-    private static String CREATE_MOVEMENT_TABLE =
+    private static final String CREATE_MOVEMENT_TABLE =
             "CREATE TABLE IF NOT EXISTS movement(" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "code TEXT(13) NOT NULL," +
                     "operation INTEGER NOT NULL," +
-                    "timestamp long DEFAULT CURRENT_DATE NOT NULL," +
+                    "timestamp long DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')) NOT NULL," +
                     "FOREIGN KEY(code) REFERENCES product(code)" +
                     " ON UPDATE CASCADE" +
                     ")";

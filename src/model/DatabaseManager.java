@@ -6,12 +6,12 @@ import java.util.List;
  * Created by blackleones on 20/07/15.
  */
 public interface DatabaseManager {
-    public void openConnection();
-    public void closeConnection();
-    public void insertProduct(Product product);
-    public void deleteProductWithCode(int code);
-    public Product getProductWithCode(int code);
-    public List<Product> getAllProduct();
-    public void increaseQtaOf(int code, int qta);
-    public void decreaseQtaOf(int code, int qta);
+    void openConnection();
+    void closeConnection();
+    void insertProduct(Product product);
+    void deleteProductWithCode(String code);
+    Product getProductWithCode(String code);
+    List<Product> getAllProduct();
+    void increaseQtaOf(String code, int qta);
+    void decreaseQtaOf(String code, int qta);
 }

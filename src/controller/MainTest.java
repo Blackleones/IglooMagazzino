@@ -12,7 +12,7 @@ public class MainTest {
         DatabaseManager dbManager = new Database();
         dbManager.openConnection();
         dbManager.insertProduct(new Product("ddd", "nome", 40, 3));
-
+        System.out.println(dbManager.getProductWithCode("ddd"));
         dbManager.closeConnection();
         System.out.println("Fine test.");
     }
