@@ -1,17 +1,27 @@
 package model;
 
+import utils.Timestamp_util;
+
 import java.util.Date;
 
 /**
  * Created by blackleones on 20/07/15.
  */
 public class Movement {
-    String qta;
-    String date;
+    private int qta;
+    private String date;
 
-    public Movement(String qta, String date){
+    public Movement(int qta){
         this.qta = qta;
-        this.date = date;
+        this.date = Timestamp_util.getFormattedCurrentTime();
+    }
+
+    public int getQta() {
+        return qta;
+    }
+
+    public String getDate() {
+        return date;
     }
 
     @Override

@@ -27,13 +27,19 @@ public class Database extends Database_Core implements DatabaseManager {
     private static final String OPERATION = "operation";
     private static final String DATE = "timestamp";
 
+    /*
+    * inserimento del prodotto se e solo se il suo codice non è già presente all'interno della tabella "product"
+    * */
     private static final String query_insert_product = "INSERT INTO product (code, name, limit_qta) " +
             "SELECT ?, ?, ? WHERE NOT EXISTS (SELECT code FROM product " +
             "WHERE code = ?)";
 
-    private static final String query_insert_movement = "INSERT INTO movement (code, operation) " +
-            "SELECT ?, ? WHERE EXISTS (SELECT code FROM product " +
-            "WHERE code= ?)";
+    /*
+    * inserimento del movimento se s solo se il codice del prodotto è presente all'interno della tabella "product"
+    * */
+    private static final String query_insert_movement = "INSERT INTO movement (code, operation, timestamp) " +
+            "SELECT ?, ?, ? WHERE EXISTS (SELECT code FROM product " +
+            "WHERE code = ?)";
 
     private static final String query_product_info = "SELECT product.*, SUM(movement.operation) AS qta " +
             "FROM product JOIN movement on product.code = movement.code " +
@@ -62,10 +68,10 @@ public class Database extends Database_Core implements DatabaseManager {
     }
 
     @Override
-    public void insertProduct(Product product) {
-        /*
-        * se il prodotto è nuovo verrà inserito all'interno della tabella prodotti
-        * */
+    public void insertNewProduct(Product product) {
+        if(product == null)
+            throw new IllegalArgumentException();
+
         try {
             preparedStatement = connection.prepareStatement(query_insert_product);
             preparedStatement.setString(1, product.getCode());
@@ -77,15 +83,19 @@ public class Database extends Database_Core implements DatabaseManager {
             e.printStackTrace();
         }
 
-        /*
-        * se il prodotto è gia stato registrato all'interno della tabella prodotti allora
-        * salvo il suo "movimento" all'interno della tabella movimenti
-        * */
+    }
+
+    @Override
+    public void insertNewMovement(String code, Movement movement) {
+        if(code == null || movement == null)
+            throw new IllegalArgumentException();
+
         try {
             preparedStatement = connection.prepareStatement(query_insert_movement);
-            preparedStatement.setString(1, product.getCode());
-            preparedStatement.setInt(2, product.getQta());
-            preparedStatement.setString(3, product.getCode());
+            preparedStatement.setString(1, code);
+            preparedStatement.setInt(2, movement.getQta());
+            preparedStatement.setString(3, movement.getDate());
+            preparedStatement.setString(4, code);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -94,68 +104,8 @@ public class Database extends Database_Core implements DatabaseManager {
     }
 
     @Override
-    public void deleteProductWithCode(String code) {
-
-    }
-
-    /*
-    * ipotesi: "code" appartiene alla tabella product in quanto questa funzione puo'
-    * essere chiamata solo su codici ottenuti dalla tabella product
-    * */
-    @Override
-    public Product getProductWithCode(String code) {
-            Product product = null;
-            List<Movement> movement = new ArrayList<Movement>();
-
-        try {
-            /*
-            * prendo la lista movementi relativa a "code"
-            * */
-            preparedStatement = connection.prepareStatement(query_product_movement);
-            preparedStatement.setString(1, code);
-            queryResult = preparedStatement.executeQuery();
-
-            while(queryResult.next()){
-                movement.add(
-                        new Movement(
-                                    queryResult.getString(OPERATION),
-                                    queryResult.getString(DATE)
-                        )
-                );
-            }
-
-            /*
-            * prendo le informazioni del prodotto "code"
-            * */
-            preparedStatement = connection.prepareStatement(query_product_info);
-            preparedStatement.setString(1, code);
-            queryResult = preparedStatement.executeQuery();
-
-            product = new Product(queryResult.getString(CODE),
-                            queryResult.getString(NAME),
-                            queryResult.getInt(QTA),
-                            queryResult.getInt(LIMIT_QTA),
-                            movement);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return product;
-    }
-
-    @Override
     public List<Product> getAllProduct() {
         return null;
     }
 
-    @Override
-    public void increaseQtaOf(String code, int qta) {
-
-    }
-
-    @Override
-    public void decreaseQtaOf(String code, int qta) {
-
-    }
 }
