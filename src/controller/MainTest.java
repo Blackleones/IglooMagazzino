@@ -16,6 +16,8 @@ public class MainTest {
 
         pm.open();
         pm.loadDataFromDatabase();
+        pm.modifyQta("002", 60);
+        pm.modifyQta("004", 40);
         pm.close();
         System.out.println("Fine test.");
     }

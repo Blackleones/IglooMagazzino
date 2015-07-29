@@ -57,4 +57,8 @@ public class Product implements Cloneable{
     public List<Movement> getMovements() {
         return movements;
     }
+
+    public void modifyQta(int qta) {
+        this.qta = qta;
+    }
 }

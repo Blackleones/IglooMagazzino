@@ -1,8 +1,6 @@
 package controller;
 
-import model.Movement;
 import model.Product;
-
 import java.util.HashMap;
 
 /**
@@ -37,6 +35,12 @@ public interface ProductManager {
     * @do: prepara le strutture dati
     * */
     void loadDataFromDatabase();
+    /*
+    * @do: modifica la qta di product e ne registra il movimento
+    * @param: code, il codice del prodotto da modificare
+    * @param: qta, la nuova qta
+    * */
+    void modifyQta(String code, int qta);
     /*
     * @do: ritorna la struttura dati dei prodotti in magazzino
     * */

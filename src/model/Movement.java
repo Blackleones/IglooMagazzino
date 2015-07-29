@@ -6,6 +6,10 @@ import utils.Timestamp_util;
  * Created by blackleones on 28/07/15.
  */
 public class Movement {
+    public static final String MODIFY = "MODIFICA";
+    public static final String STORED = "DEPOSITO";
+    public static final String RETIRED = "RITIRATO";
+
     private int qta;
     private String reason;
     private String date;

@@ -65,6 +65,18 @@ public class Manager implements ProductManager {
     }
 
     @Override
+    public void modifyQta(String code, int qta){
+        if(!storedProducts.containsKey(code))
+            storedProducts.put(code, allProducts.get(code));
+
+        Product p = storedProducts.get(code);
+        int diff = qta - p.getQta();
+        p.modifyQta(qta);
+
+        insertMovement(code, diff, Movement.MODIFY);
+    }
+
+    @Override
     public HashMap<String, Product> getStoredProduct() {
         return storedProducts;
     }
