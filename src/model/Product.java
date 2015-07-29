@@ -1,38 +1,49 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by blackleones on 14/07/15.
+ * Created by blackleones on 28/07/15.
  */
-public class Product {
+public class Product implements Cloneable{
     private String code;
     private String name;
     private int qta;
     private int limit_qta;
-
     private List<Movement> movements;
 
-    public Product(String code, String name, int qta, int limit_qta){
+    public Product(String code, String name, int limit_qta){
         this.code = code;
         this.name = name;
-        this.qta = qta;
         this.limit_qta = limit_qta;
-        this.movements = null;
+        movements = new ArrayList<Movement>();
     }
 
-    public Product(String code, String name, int qta, int limit_qta, List<Movement> movements)
-    {
-        this(code, name, qta, limit_qta);
+    public Product(String code, String name, int limit_qta, List<Movement> movements){
+        this(code, name, limit_qta);
         this.movements = movements;
     }
 
-    public String getName() {
-        return name;
+    public void updateQta(int update){
+        qta += update;
+    }
+
+    public void insertMovement(Movement movement){
+        movements.add(movement);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return new Product(code, name, limit_qta, movements);
     }
 
     public String getCode() {
         return code;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int getQta() {
@@ -45,16 +56,5 @@ public class Product {
 
     public List<Movement> getMovements() {
         return movements;
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "code='" + code + '\'' +
-                ", name='" + name + '\'' +
-                ", qta=" + qta +
-                ", limit_qta=" + limit_qta +
-                ", \nmovements=" + movements +
-                '}'+"\n";
     }
 }

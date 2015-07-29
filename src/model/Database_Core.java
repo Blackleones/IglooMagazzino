@@ -15,7 +15,7 @@ public class Database_Core {
     private static final String DB_ADDRESS = "jdbc:sqlite:"+DATABASE_NAME;
     private static final String CREATE_PRODUCT_TABLE =
             "CREATE TABLE IF NOT EXISTS product(" +
-                    "code TEXT(13) PRIMARY KEY," +
+                    "id TEXT(13) PRIMARY KEY," +
                     "name TEXT(255) NOT NULL," +
                     "limit_qta INTEGER DEFAULT 5" +
                     ")";
@@ -23,12 +23,27 @@ public class Database_Core {
     private static final String CREATE_MOVEMENT_TABLE =
             "CREATE TABLE IF NOT EXISTS movement(" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "code TEXT(13) NOT NULL," +
+                    "product_id TEXT(13) NOT NULL," +
                     "operation INTEGER NOT NULL," +
-                    "timestamp long DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')) NOT NULL," +
-                    "FOREIGN KEY(code) REFERENCES product(code)" +
-                    " ON UPDATE CASCADE" +
+                    "reason TEXT NOT NULL," +
+                    "date TIMESTAMP NOT NULL," +
+                    "FOREIGN KEY (product_id) REFERENCES product(id) ON UPDATE CASCADE" +
                     ")";
+
+    private static final String CREATE_IN_STORE_TABLE =
+            "CREATE TABLE IF NOT EXISTS in_store(" +
+                    "product_id TEXT(13) PRIMARY KEY," +
+                    "qta INTEGER NOT NULL," +
+                    "FOREIGN KEY(product_id) REFERENCES product(id) ON UPDATE CASCADE" +
+                    ")";
+
+    private static final String CREATE_UPDATE_QTA_TRIGGER =
+            "CREATE TRIGGER IF NOT EXISTS update_qta AFTER INSERT ON movement " +
+                    "BEGIN " +
+                    "INSERT OR REPLACE INTO in_store VALUES " +
+                    "(NEW.product_id, COALESCE((SELECT qta + NEW.operation FROM in_store WHERE product_id = NEW.product_id), " +
+                                                "NEW.operation)); " +
+                    "END;";
 
     protected Connection connection = null;
 
@@ -49,9 +64,13 @@ public class Database_Core {
         try {
             Statement statement = connection.createStatement();
             statement.execute(CREATE_PRODUCT_TABLE);
-            System.out.println("Tabella product creata");
+            System.out.println("Tabella product creata.");
             statement.execute(CREATE_MOVEMENT_TABLE);
-            System.out.println("Tabella movement creata");
+            System.out.println("Tabella movement creata.");
+            statement.execute(CREATE_IN_STORE_TABLE);
+            System.out.println("Tabella in_store creata.");
+            statement.execute(CREATE_UPDATE_QTA_TRIGGER);
+            System.out.println("Trigger update_qta creato.");
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();

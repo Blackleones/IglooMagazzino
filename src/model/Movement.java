@@ -2,33 +2,35 @@ package model;
 
 import utils.Timestamp_util;
 
-import java.util.Date;
-
 /**
- * Created by blackleones on 20/07/15.
+ * Created by blackleones on 28/07/15.
  */
 public class Movement {
     private int qta;
+    private String reason;
     private String date;
 
-    public Movement(int qta){
+    public Movement(int qta, String reason){
         this.qta = qta;
-        this.date = Timestamp_util.getFormattedCurrentTime();
+        this.reason = reason;
+        date = Timestamp_util.getFormattedCurrentTime();
+    }
+
+    Movement(int qta, String reason, String date){
+        this.qta = qta;
+        this.reason = reason;
+        this.date = date;
     }
 
     public int getQta() {
         return qta;
     }
 
-    public String getDate() {
-        return date;
+    public String getReason() {
+        return reason;
     }
 
-    @Override
-    public String toString() {
-        return "\nMovement{" +
-                "qta='" + qta + '\'' +
-                ", date='" + date + '\'' +
-                '}';
+    public String getDate() {
+        return date;
     }
 }
